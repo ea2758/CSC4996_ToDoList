@@ -6,7 +6,7 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 <body>
 <form action = "ToDoList.php" method="post">
 	<h1>To Do List </h1>
-	<center><table border = "3" width = "400" height = "300">
+	<center><table border = "3" width = "400" height = "250">
 	
 	<tr>
 	<td align="center"><input type = "submit" name="viewList" value="View List"></td>
@@ -20,7 +20,8 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 	<br>
 	
 	<tr>
-	<td align="center"><input type = "submit" name = "Remove Item" value = "Remove Item"></td>
+	<td align="center"><input type = "submit" name = "Remove Item" value = "Remove Item">
+						<input type = "name" name="completedItem"></td>
 	</tr>
 	
 </table></center>
@@ -48,7 +49,17 @@ if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
 			echo $printer['uncompleted_task']; 
 			echo "\n";
 		}
-		
+		}
+if(isset($_POST["completedItem"])&&!empty($_POST["completedItem"])){
+	
+	$itemDone = mysqli_real_escape_string($link, $_POST["completedItem"]);
+	$removeSQL = "DELETE FROM uncompleted_tasks WHERE task_number='$itemDone'";
+	if(mysqli_query($link,$removeSQL)){
+		echo "Item removed successfully\n\n";	
+	} else{
+		echo "Error: invalid query".mysqli_error($link);
+	}
+	
 		
 }
 ?>
