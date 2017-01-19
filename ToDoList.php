@@ -1,3 +1,6 @@
+<?php
+require 'db/connect.php'
+?>
 <html>
 <center><head><title>To Do List</title></head>
 <body>
@@ -23,27 +26,21 @@
 </table></center>
 </body>
 </html>
-<?php $counter=1;?>
 <?php
-$link = mysqli_connect("localhost","root","");
-if($link==false){
-	die("Error: connection error");
-}
-mysqli_select_db($link,"ToDoList") or die("error: cannot locate database");
+
+//$printTable = "SELECT * FROM uncompleted_tasks";
 
 if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
+	
 	$item = mysqli_real_escape_string($link, $_POST["newItem"]);
-	$insertSQL = "INSERT INTO uncompleted_tasks(task_number,uncompleted_task)VALUES('$counter','$item')";
+	$insertSQL = "INSERT INTO uncompleted_tasks(uncompleted_task)VALUES('$item')";
 	if(mysqli_query($link,$insertSQL)){
-		echo "Item added successfully";
-		$counter++;
+		echo "Item added successfully\n\n";	
 	} else{
 		echo "Error: invalid query".mysqli_error($link);
 	}
 }
-
-
-
-
-
+if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
+	
+}
 ?>
