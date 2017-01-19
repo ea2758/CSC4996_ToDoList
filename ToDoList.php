@@ -1,5 +1,5 @@
 <?php
-require 'db/connect.php'
+require 'C:/wamp64/www/ToDoList/connection.php'
 ?>
 <html>
 <center><head><title>To Do List</title></head>
@@ -40,7 +40,7 @@ if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
 		echo "Error: invalid query".mysqli_error($link);
 	}
 }
-if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
+/*if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
 	
-}
+}*/
 ?>
