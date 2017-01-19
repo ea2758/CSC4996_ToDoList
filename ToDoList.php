@@ -5,12 +5,13 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 <center><head><title>To Do List</title></head>
 <body>
 <form action = "ToDoList.php" method="post">
-	<h1>To Do List </h1>
+	<h1>To Do List </h1> 
 	<center><table border = "3" width = "400" height = "250">
 	
 	<tr>
 	<td align="center"><input type = "submit" name="viewList" value="To Do List">
-						<input type = "submit" name="viewCompleted" value="Completed Tasks"></td>
+						<input type = "submit" name="viewCompleted" value="Completed Tasks">
+						<input type = "submit" name="clearAll" value="Clear Lists"></td>
 	</tr>
 	<br>
 	
@@ -70,22 +71,42 @@ if(isset($_POST["viewCompleted"])&&!empty($_POST["viewCompleted"])){
 }
 //Delete Task Button
 if(isset($_POST["completedItem"])&&!empty($_POST["completedItem"])){
-	
+	//get value from input field (task_number of element to be removed)
 	$itemDone = mysqli_real_escape_string($link, $_POST["completedItem"]);
-	
-	
-	$insertSQL = "INSERT INTO completed_tasks(completed_task)VALUES('$itemDone')";
+	//query to get the value of the element itself
+	$itemDoneSQL = mysqli_query($link,"SELECT uncompleted_task FROM uncompleted_tasks
+	WHERE task_number='$itemDone'");
+	//executing the query to store the value in a variable
+	$itemDoneValue = mysqli_fetch_array($itemDoneSQL);
+	//query to copy the value stored into the completed_tasks table
+	$insertSQL = "INSERT INTO completed_tasks(completed_task)VALUES('$itemDoneValue[uncompleted_task]')";
+	//execution of the query to copy this value 
 	if(mysqli_query($link,$insertSQL)){
-		echo "and added to completed list.\n\n";	
+		
 	} 
 	
 	$removeSQL = "DELETE FROM uncompleted_tasks WHERE task_number='$itemDone'";
 	if(mysqli_query($link,$removeSQL)){
-		echo "Item removed successfully\n\n";	
+		echo "Item removed successfully and added to completed list.";	
 	} else{
 		echo "Error: invalid query".mysqli_error($link);
 	}
 	
 		
+}
+if(isset($_POST["clearAll"])&&!empty($_POST["clearAll"])){
+	echo "All stored data has been cleared.";
+	$wipeTableSQL = "DELETE FROM `uncompleted_tasks`";
+	$wipeTable2SQL = "DELETE FROM `completed_tasks`";
+	$resetIncrementSQL = "ALTER TABLE `uncompleted_tasks` AUTO_INCREMENT=1";
+	$resetIncrement2SQL = "ALTER TABLE `completed_tasks` AUTO_INCREMENT=1";
+	
+	mysqli_query($link,$wipeTableSQL);
+	mysqli_query($link,$wipeTable2SQL);
+	mysqli_query($link,$resetIncrementSQL);
+	mysqli_query($link,$resetIncrement2SQL);
+
+
+
 }
 ?>
