@@ -9,7 +9,8 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 	<center><table border = "3" width = "400" height = "250">
 	
 	<tr>
-	<td align="center"><input type = "submit" name="viewList" value="View List"></td>
+	<td align="center"><input type = "submit" name="viewList" value="To Do List">
+						<input type = "submit" name="viewCompleted" value="Completed Tasks"></td>
 	</tr>
 	<br>
 	
@@ -28,7 +29,7 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 </body>
 </html>
 <?php
-
+//Add Item Button
 if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
 	
 	$item = mysqli_real_escape_string($link, $_POST["newItem"]);
@@ -39,20 +40,45 @@ if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
 		echo "Error: invalid query".mysqli_error($link);
 	}
 }
+//View To Do List Button
 if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
 	$printSQL = "SELECT * FROM uncompleted_tasks";
 	$printData = mysqli_query($link,$printSQL);
 		
 		while($printer = mysqli_fetch_array($printData)){
+			echo '<pre>';
 			echo $printer['task_number'];
-			echo "      ";
+			echo "\t";
 			echo $printer['uncompleted_task']; 
 			echo "\n";
+			echo '</pre>';
 		}
+}
+//View Completed Tasks Button
+if(isset($_POST["viewCompleted"])&&!empty($_POST["viewCompleted"])){
+	$printSQL = "SELECT * FROM completed_tasks";
+	$printData = mysqli_query($link,$printSQL);
+		
+		while($printer = mysqli_fetch_array($printData)){
+			echo '<pre>';
+			echo $printer['task_number'];
+			echo "\t";
+			echo $printer['completed_task']; 
+			echo "\n";
+			echo '</pre>';
 		}
+}
+//Delete Task Button
 if(isset($_POST["completedItem"])&&!empty($_POST["completedItem"])){
 	
 	$itemDone = mysqli_real_escape_string($link, $_POST["completedItem"]);
+	
+	
+	$insertSQL = "INSERT INTO completed_tasks(completed_task)VALUES('$itemDone')";
+	if(mysqli_query($link,$insertSQL)){
+		echo "and added to completed list.\n\n";	
+	} 
+	
 	$removeSQL = "DELETE FROM uncompleted_tasks WHERE task_number='$itemDone'";
 	if(mysqli_query($link,$removeSQL)){
 		echo "Item removed successfully\n\n";	
