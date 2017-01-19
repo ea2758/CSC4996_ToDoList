@@ -28,8 +28,6 @@ require 'C:/wamp64/www/ToDoList/connection.php'
 </html>
 <?php
 
-//$printTable = "SELECT * FROM uncompleted_tasks";
-
 if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
 	
 	$item = mysqli_real_escape_string($link, $_POST["newItem"]);
@@ -40,7 +38,17 @@ if(isset($_POST["addItem"])&&!empty($_POST["addItem"])){
 		echo "Error: invalid query".mysqli_error($link);
 	}
 }
-/*if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
-	
-}*/
+if(isset($_POST["viewList"])&&!empty($_POST["viewList"])){
+	$printSQL = "SELECT * FROM uncompleted_tasks";
+	$printData = mysqli_query($link,$printSQL);
+		
+		while($printer = mysqli_fetch_array($printData)){
+			echo $printer['task_number'];
+			echo "      ";
+			echo $printer['uncompleted_task']; 
+			echo "\n";
+		}
+		
+		
+}
 ?>
